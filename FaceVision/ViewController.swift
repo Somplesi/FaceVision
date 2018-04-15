@@ -19,6 +19,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var session: AVCaptureSession?
     var previewLayer: AVCaptureVideoPreviewLayer?
     var position = AVCaptureDevice.Position.back
+    var shapeLayers = [CAShapeLayer]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,7 +91,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     func choisirActionAEffectuer(ciImage: CIImage) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.sync {
             switch self.segment.selectedSegmentIndex {
             case 0: self.detectionDeVisages(ciImage)
             default: break
