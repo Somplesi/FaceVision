@@ -20,12 +20,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var previewLayer: AVCaptureVideoPreviewLayer?
     var position = AVCaptureDevice.Position.back
     var shapeLayers = [CAShapeLayer]()
+    var shapeLayer = CAShapeLayer()
     var isMoustache = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         //Vérifier authorisation
         verifierAutorisationEtLancerCamera()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        shapeLayer.frame = cameraVue.bounds
+        shapeLayer.setAffineTransform(CGAffineTransform(scaleX: -1, y: -1))
+        view.layer.addSublayer(shapeLayer)
     }
     
     func verifierAutorisationEtLancerCamera() {
