@@ -90,7 +90,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     func choisirActionAEffectuer(ciImage: CIImage) {
-        
+        DispatchQueue.main.async {
+            switch self.segment.selectedSegmentIndex {
+            case 0: self.detectionDeVisages(ciImage)
+            default: break
+            }
+        }
     }
     
     @IBAction func rotationAction(_ sender: Any) {
