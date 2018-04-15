@@ -15,7 +15,12 @@ extension ViewController {
         for s in shapeLayers {
             s.removeFromSuperlayer()
         }
+        for m in moustaches {
+            m.removeFromSuperlayer()
+        }
+        
         shapeLayers.removeAll()
+        moustaches.removeAll()
         shapeLayer.sublayers?.removeAll()
     }
     
@@ -66,6 +71,15 @@ extension ViewController {
                 let resultatsTries = resultats.sorted(by: {$0.boundingBox.minX > $1.boundingBox.minX})
                 if self.isMoustache {
                     // Verifier si on doit enlever les moustaches
+                    if self.moustaches.count > 0 {
+                        for x in (0...self.moustaches.count - 1) {
+                            if x > resultatsTries.count, self.moustaches.count > x {
+                                let moustache = self.moustaches[x]
+                                moustache.removeFromSuperlayer()
+                                self.moustaches.remove(at: x)
+                            }
+                        }
+                    }
                 } else {
                     self.supprimerAnciennesFrames()
                 }
@@ -81,6 +95,48 @@ extension ViewController {
                         self.convertirLandmarkEnshape(observation.landmarks?.rightEye, rectAjuste)
                         self.convertirLandmarkEnshape(observation.landmarks?.leftEyebrow, rectAjuste)
                         self.convertirLandmarkEnshape(observation.landmarks?.rightEyebrow, rectAjuste)
+                        
+                    } else {
+                        if let nez = observation.landmarks?.nose, let index = resultatsTries.index(of: observation) {
+                            let points = self.convertirPoints(points: nez.normalizedPoints, rectAjuste)
+                            var minX = points[0].x
+                            var maxX = points[0].x
+                            var minY = points[0].y
+                            var maxY = points[0].y
+                            for point in points {
+                                if point.x > maxX {
+                                    maxX = point.x
+                                }
+                                if point.x < minX {
+                                    minX = point.x
+                                }
+                                
+                                if point.y > maxY {
+                                    maxY = point.y
+                                }
+                                if point.y < minY {
+                                    minY = point.y
+                                }
+                                
+                                let largeur = (maxX - minX) * 3
+                                let milieu = (maxX + minX) / 2
+                                let hauteur = largeur / 2
+                                
+                                if self.moustaches.count <= index {
+                                    let moustache = CALayer()
+                                    moustache.backgroundColor = UIColor.clear.cgColor
+                                    moustache.frame = CGRect(x: 0, y: 0, width: largeur, height: hauteur)
+                                    moustache.position = CGPoint(x: milieu, y: minY - (hauteur / 8))
+                                    moustache.contents = #imageLiteral(resourceName: "moustache").cgImage
+                                    self.moustaches.append(moustache)
+                                    self.shapeLayer.addSublayer(moustache)
+                                } else {
+                                    let moustache = self.moustaches[index]
+                                    moustache.frame = CGRect(x: 0, y: 0, width: largeur, height: hauteur)
+                                    moustache.position = CGPoint(x: milieu, y: minY - (largeur / 8))
+                                }
+                            }
+                        }
                         
                     }
                 }

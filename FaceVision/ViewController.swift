@@ -21,6 +21,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var position = AVCaptureDevice.Position.back
     var shapeLayers = [CAShapeLayer]()
     var shapeLayer = CAShapeLayer()
+    var moustaches = [CALayer]()
     var isMoustache = false
     
     override func viewDidLoad() {
