@@ -20,6 +20,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var previewLayer: AVCaptureVideoPreviewLayer?
     var position = AVCaptureDevice.Position.back
     var shapeLayers = [CAShapeLayer]()
+    var isMoustache = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,6 +95,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         DispatchQueue.main.sync {
             switch self.segment.selectedSegmentIndex {
             case 0: self.detectionDeVisages(ciImage)
+            case 1:
+                self.isMoustache = false
+                self.detectionElementsDuVisage(ciImage)
+            case 2:
+                self.isMoustache = true
+                self.detectionElementsDuVisage(ciImage)
             default: break
             }
         }

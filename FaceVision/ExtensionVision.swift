@@ -48,6 +48,42 @@ extension ViewController {
             }
         }
     }
+    
+    func detectionElementsDuVisage(_ ciImage: CIImage) {
+        let requete = VNDetectFaceLandmarksRequest(completionHandler: completionElement)
+        let handler = VNImageRequestHandler(ciImage: ciImage, options: [:])
+        do {
+            try handler.perform([requete])
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func completionElement( _ requete: VNRequest, _ error: Error?) {
+        if let resultats = requete.results as? [VNFaceObservation], resultats.count > 0 {
+            DispatchQueue.main.async {
+                let resultatsTries = resultats.sorted(by: {$0.boundingBox.minX > $1.boundingBox.minX})
+                if self.isMoustache {
+                    // Verifier si on doit enlever les moustaches
+                } else {
+                    self.supprimerAnciennesFrames()
+                }
+                
+                for observation in resultatsTries {
+                    if !self.isMoustache {
+                        
+                    }
+                }
+                
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.supprimerAnciennesFrames()
+            }
+        }
+        
+    }
+    
 }
 
 
