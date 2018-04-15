@@ -13,6 +13,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     @IBOutlet weak var cameraVue: UIView!
     @IBOutlet weak var rotationBouton: UIButton!
+    @IBOutlet weak var segment: UISegmentedControl!
     
     let mediaType = AVMediaType.video
     var session: AVCaptureSession?

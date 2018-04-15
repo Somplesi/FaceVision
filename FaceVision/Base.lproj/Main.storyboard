@@ -20,7 +20,22 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uhQ-Ep-5Bn">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="sxx-x5-4Qp">
+                                        <rect key="frame" x="20" y="20" width="335" height="29"/>
+                                        <segments>
+                                            <segment title="Rectangle"/>
+                                            <segment title="Landmarks"/>
+                                            <segment title="Moustache"/>
+                                        </segments>
+                                    </segmentedControl>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="sxx-x5-4Qp" firstAttribute="top" secondItem="uhQ-Ep-5Bn" secondAttribute="top" constant="20" id="Q0b-JX-4QM"/>
+                                    <constraint firstItem="sxx-x5-4Qp" firstAttribute="leading" secondItem="uhQ-Ep-5Bn" secondAttribute="leading" constant="20" id="aHj-wf-wD4"/>
+                                    <constraint firstAttribute="trailing" secondItem="sxx-x5-4Qp" secondAttribute="trailing" constant="20" id="nln-nK-mk1"/>
+                                </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ysu-0l-7pg">
                                 <rect key="frame" x="8" y="609" width="50" height="50"/>
@@ -48,6 +63,7 @@
                     <connections>
                         <outlet property="cameraVue" destination="uhQ-Ep-5Bn" id="Rlj-Pa-sfD"/>
                         <outlet property="rotationBouton" destination="ysu-0l-7pg" id="H7t-lk-6b2"/>
+                        <outlet property="segment" destination="sxx-x5-4Qp" id="g5m-pP-qvr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
