@@ -11,18 +11,20 @@ import Vision
 
 extension ViewController {
     
-    func supprimerAnciennesFrames() {
+    func supprimerAnciennesFrames(moustache: Bool) {
         for s in shapeLayers {
             s.removeFromSuperlayer()
         }
-        for m in moustaches {
-            m.removeFromSuperlayer()
+        if !moustache {
+            for m in moustaches {
+                m.removeFromSuperlayer()
+            }
+             moustaches.removeAll()
         }
-        
         shapeLayers.removeAll()
-        moustaches.removeAll()
         shapeLayer.sublayers?.removeAll()
     }
+    
     
     func detectionDeVisages(_ ciImage: CIImage) {
         let requete = VNDetectFaceRectanglesRequest(completionHandler: completionDetection)
@@ -38,7 +40,7 @@ extension ViewController {
     func completionDetection(_ requete: VNRequest, _ error: Error?) {
         guard let resultats = requete.results as? [VNFaceObservation], resultats.count > 0 else { return }
         // Supprime les anciennes détections de visage
-        supprimerAnciennesFrames()
+        supprimerAnciennesFrames(moustache: true)
         for resultat in resultats {
             //Ajouter les nouvelles frames
             DispatchQueue.main.async {
@@ -71,6 +73,7 @@ extension ViewController {
                 let resultatsTries = resultats.sorted(by: {$0.boundingBox.minX > $1.boundingBox.minX})
                 if self.isMoustache {
                     // Verifier si on doit enlever les moustaches
+                    self.supprimerAnciennesFrames(moustache: false)
                     if self.moustaches.count > 0 {
                         for x in (0...self.moustaches.count - 1) {
                             if x > resultatsTries.count, self.moustaches.count > x {
@@ -81,7 +84,7 @@ extension ViewController {
                         }
                     }
                 } else {
-                    self.supprimerAnciennesFrames()
+                    self.supprimerAnciennesFrames(moustache: true)
                 }
                 
                 for observation in resultatsTries {
@@ -144,7 +147,7 @@ extension ViewController {
             }
         } else {
             DispatchQueue.main.async {
-                self.supprimerAnciennesFrames()
+                self.supprimerAnciennesFrames(moustache: true)
             }
         }
         
