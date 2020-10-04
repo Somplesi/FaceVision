@@ -2,8 +2,8 @@
 //  ExtensionVision.swift
 //  FaceVision
 //
-//  Created by Matthieu PASSEREL on 15/04/2018.
-//  Copyright © 2018 Matthieu PASSEREL. All rights reserved.
+//  Created by Rodolphe DUPUY on 15/04/2020.
+//  Copyright © 2018 Rodolphe DUPUY. All rights reserved.
 //
 
 import UIKit
@@ -100,7 +100,7 @@ extension ViewController {
                         self.convertirLandmarkEnshape(observation.landmarks?.rightEyebrow, rectAjuste)
                         
                     } else {
-                        if let nez = observation.landmarks?.nose, let index = resultatsTries.index(of: observation) {
+                        if let nez = observation.landmarks?.nose, let index = resultatsTries.firstIndex(of: observation) {
                             let points = self.convertirPoints(points: nez.normalizedPoints, rectAjuste)
                             var minX = points[0].x
                             var maxX = points[0].x

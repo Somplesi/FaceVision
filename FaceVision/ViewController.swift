@@ -2,8 +2,8 @@
 //  ViewController.swift
 //  FaceVision
 //
-//  Created by Matthieu PASSEREL on 15/04/2018.
-//  Copyright © 2018 Matthieu PASSEREL. All rights reserved.
+//  Created by Rodolphe DUPUY on 15/04/2020.
+//  Copyright © 2018 Rodolphe DUPUY. All rights reserved.
 //
 
 import UIKit
@@ -38,12 +38,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     func verifierAutorisationEtLancerCamera() {
+        // Ajouter dans plist: Privacy - Camera Usage Description
         let autorisation = AVCaptureDevice.authorizationStatus(for: mediaType)
         switch autorisation {
         case .authorized: miseEnPlaceCamera()
         case .denied: print("L'utilisateur a refusé l'accès à la caméra")
         case .restricted: print("L'utilisation de la camera est restreint")
-        case .notDetermined:
+        //case .notDetermined:
+        default:
             AVCaptureDevice.requestAccess(for: mediaType) { (success) in
                 DispatchQueue.main.async {
                     self.verifierAutorisationEtLancerCamera()
@@ -90,13 +92,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         guard let pixel = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
-        guard let copie = CMCopyDictionaryOfAttachments(kCFAllocatorDefault, sampleBuffer, kCMAttachmentMode_ShouldPropagate) else { return }
-        let ciImage = CIImage(cvImageBuffer: pixel, options: copie as? [String: Any])
+        guard let copie = CMCopyDictionaryOfAttachments(allocator: kCFAllocatorDefault, target: sampleBuffer, attachmentMode: kCMAttachmentMode_ShouldPropagate) else { return }
+        let ciImage = CIImage(cvImageBuffer: pixel, options: convertToOptionalCIImageOptionDictionary(copie as? [String: Any]))
         if position == .front {
-            self.choisirActionAEffectuer(ciImage: ciImage.oriented(forExifOrientation: Int32(UIImageOrientation.leftMirrored.rawValue)))
+            self.choisirActionAEffectuer(ciImage: ciImage.oriented(forExifOrientation: Int32(UIImage.Orientation.leftMirrored.rawValue)))
             // Image a utiliser avec Vision
         } else {
-            self.choisirActionAEffectuer(ciImage: ciImage.oriented(forExifOrientation: Int32(UIImageOrientation.downMirrored.rawValue)))
+            self.choisirActionAEffectuer(ciImage: ciImage.oriented(forExifOrientation: Int32(UIImage.Orientation.downMirrored.rawValue)))
         }
     }
     
@@ -120,9 +122,16 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         switch position {
         case .back: position = .front
         case .front: position = .back
-        case .unspecified: position = .back
+        //case .unspecified: position = .back
+        default: position = .back
         }
         verifierAutorisationEtLancerCamera()
     }
 }
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalCIImageOptionDictionary(_ input: [String: Any]?) -> [CIImageOption: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (CIImageOption(rawValue: key), value)})
+}
